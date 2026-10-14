@@ -1,22 +1,29 @@
 
 import streamlit as st
-import sys
-import importlib.metadata as metadata
+import joblib
+import os
 
-st.title("Heart Disease Dependency Test")
+st.title("Heart Disease Model Loading Test")
 
-st.write("Python Version:", sys.version)
+model_path = "heart_disease_model.pkl"
 
-packages = [
-    "streamlit",
-    "pandas",
-    "scikit-learn",
-    "joblib"
-]
+# Check model file
+if os.path.exists(model_path):
+    st.success("Model file found!")
+    st.write("Model size:", os.path.getsize(model_path), "bytes")
 
-for package in packages:
     try:
-        version = metadata.version(package)
-        st.success(f"{package}: Installed ({version})")
-    except metadata.PackageNotFoundError:
-        st.error(f"{package}: NOT INSTALLED")
+        package = joblib.load(model_path)
+
+        st.success("Model loaded successfully!")
+
+        st.write("Package keys:", list(package.keys()))
+        st.write("Features:", package["features"])
+        st.write("Model type:", type(package["model"]).__name__)
+
+    except Exception as e:
+        st.error("Model loading failed!")
+        st.exception(e)
+
+else:
+    st.error("Model file not found!")
