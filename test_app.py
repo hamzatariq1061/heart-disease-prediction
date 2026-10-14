@@ -1,8 +1,22 @@
 
 import streamlit as st
+import sys
+import importlib.metadata as metadata
 
-st.title("Streamlit Deployment Test")
+st.title("Heart Disease Dependency Test")
 
-st.success("Streamlit is working successfully!")
+st.write("Python Version:", sys.version)
 
-st.write("Heart Disease project deployment test.")
+packages = [
+    "streamlit",
+    "pandas",
+    "scikit-learn",
+    "joblib"
+]
+
+for package in packages:
+    try:
+        version = metadata.version(package)
+        st.success(f"{package}: Installed ({version})")
+    except metadata.PackageNotFoundError:
+        st.error(f"{package}: NOT INSTALLED")
